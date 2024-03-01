@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0">
+    <title>Train Model</title>
+    <link rel=" icon" href="{{ url_for('static', filename='img/pechai-nobg.png') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* .progress .jkoop-progress-bar-indeterminate.progress-bar-animated {
+            animation: indeterminate 2s linear infinite alternate, progress-bar-stripes 1s linear infinite;
+            width: 25% !important;
+        }
+
+        .progress .jkoop-progress-bar-indeterminate {
+            animation: indeterminate 2s linear infinite alternate;
+            width: 25% !important;
+        }
+
+        @keyframes indeterminate {
+            0% {
+                margin-left: 0;
+            }
+
+            100% {
+                margin-left: 75%;
+            }
+        } */
+
+
+        .round_md {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #176e43;
+            border-color: #176e43;
+            font-weight: 600;
+        }
+
+        .bg-primary {
+            background-color: #176e43 !important;
+
+        }
+
+        .btn-primary:hover {
+            background-color: #125232;
+            border-color: #125232;
+        }
+
+        .btn-primary:focus {
+            background-color: #125232;
+            border-color: #125232;
+        }
+
+        .white-f5 {
+            background-color: #f5f5f5;
+        }
+
+
+
+
+
+
+        .progress-bar {
+            border-radius: 10px;
+            height: 10px;
+            background-color: rgba(23, 110, 67, 0.2);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-bar-value {
+            border-radius: 10px;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(44, 163, 104);
+            animation: indeterminateAnimation 1s infinite linear;
+            transform-origin: 0% 50%;
+        }
+
+        @keyframes indeterminateAnimation {
+            0% {
+                transform: translateX(0) scaleX(0);
+            }
+
+            40% {
+                transform: translateX(0) scaleX(0.4);
+            }
+
+            100% {
+                transform: translateX(100%) scaleX(0.5);
+            }
+        }
+
+
+
+
+        .border-dash {
+            border-width: 2px;
+            border-style: dashed;
+            border-color: #c4c4c4;
+        }
+
+        .transluscent-4 {
+            background: rgba(0, 0, 0, 0.4);
+
+        }
+
+
+        .image-overlay {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            /* Adjust the height as needed */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            /* Adjust the text color */
+
+        }
+
+        .border-success {
+            border-width: 3px !important;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f5f5f5;">
+
+
+
+
+    <!-- Button trigger modal
+
+
+     Modal -->
+    <nav class="navbar navbar-expand-md navbar-light fw-bold sticky-top white-f5  bg-transparent " id="navs">
+        <div class="container-fluid ">
+            <a href="#" class="navbar-brand ps-3 pe-3  p bg-white border round_md">
+                <div class="d-flex align-items-end">
+
+                    <h2 class=" mb-sm-1"> <span style="color:#176e43;"><b>Pech</span><span style="color:#26a83d;">AI</span> <span
+                            style="color:#56b263;">Model</span></b></h2>
+                    <img width="40" height="40" style="margin-bottom:5px;margin-left:0px;transform:rotate(35deg)"
+                        src="{{ url_for('static', filename='img/pechai-nobg.png', _host='192.168.43.16:5000') }}"
+                        alt="">
+                </div>
+
+            </a>
+
+
+
+
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-md navbar-light fw-bold fixed-bottom  m-0 p-0 bg-transparent   " >
+        <div class="container-fluid justify-content-center ">
+
+
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+            <div class="d-flex bg-white border round_md align-items-center mb-3  justify-content-center ps-3 pe-3">
+                <a onclick="onTrain(this)" class="nav-link text-success border-bottom  border-success "
+                    id="onTrain"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-gear-wide" viewBox="0 0 16 16">
+                        <path
+                            d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z" />
+                    </svg>&nbsp; Train</a>
+
+                <a onclick="onTest(this)" class="nav-link text-dark  border-success   text-dark" id="onTest"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-ui-checks" viewBox="0 0 16 16">
+                        <path
+                            d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                    </svg>&nbsp;Test</a>
+
+            </div>
+
+
+
+
+        </div>
+    </nav>
+
+    <div class="container" style="padding-bottom: 100px;margin-bottom: 100px;">
+        <div class="row justify-content-center ">
+            <!-- <div class="btn-group col-sm-4 m-2">
+                <button onclick="onTrain(this)" class="btn btn-primary" id="onTrain">Train</button>
+                <button onclick="onTest(this)" class="btn border" id="onTest">Test</button>
+
+            </div> -->
+
+            <div class="">
+                <center>
+                    
+                    <div class=" " id="trainContainer" style="padding-bottom: 100px;margin-bottom: 100px;">
+                        <div class="row  justify-content-center  align-items-center  " style="height: 80vh" >
+                            <div class="row w-10  justify-content-center  ">
+                                <div class="col-md-4 p-4  text-start  border round_md  bg-white" >
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h5 class="text-truncate">Train Model</h5>
+                                        </div>
+
+                                        <div class="col-5 text-end">
+                                            <form action="/flask/upload" class="" method="POST">
+
+                                                <button
+                                                    class=" btn  rounded-pill bg-primary text-white  ps-3 pe-3 pt-0 pb-0 m-0"
+                                                    type="submit"><small>save</small>
+                                                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="fw-bolder bi bi-cloud-upload"
+                                                        viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z" />
+                                                    </svg> -->
+                                                </button>
+
+                                            </form>
+                                        </div>
+
+                                    </div>
+
+
+                                    <form id="trainForm" action="/flask/train_model" method="POST">
+
+
+                                        <!-- <label for="trainEpoch" class="small ">Epochs:</label>
+                                        <input class="form-control " type="number" id="trainEpoch" name="trainEpoch"
+                                            value="10">
+                                        <label for="trainBatch" class="small mt-2">Batch Size:</label>
+                                        <select class="form-select" aria-label="" name="trainBatch">
+                                            <option value="16">16</option>
+                                            <option value="32" selected>32</option>
+                                            <option value="64">64</option>
+                                            <option value="128">128</option>
+                                            <option value="256">256</option>
+                                            <option value="512">512</option>
+                                          </select> -->
+                                        <!-- <input class="form-control" type="number" id="trainBatch" name="trainBatch"
+                                            value="32"> -->
+                                        <!-- <label for="apiKey" class="small mt-2">Api Key:</label> -->
+
+                                        <input type="text" class="border rounded-pill form-control white-f5 mb-3 mt-4 "
+                                            id="apiKey" name="apiKey" placeholder="api key..." required />
+                                        <center>
+                                            <button class="btn btn-primary w-75 rounded-pill " id="trainBtn"
+                                                type="submit">Train</button>
+                                        </center>
+
+                                    </form>
+                                    <div id="statusContainer" class="small p-2 text-center mt-2" style="display:none">
+                                        <span id="status"></span><span id="loadingText"></span>
+                                    </div>
+                                    <!-- <div id="loadingText" > -->
+
+                                    <!-- </div> -->
+
+                                    <div class="progressContainer " style="display:none">
+                                        <div class="d-flex w-100 align-items-center " id="progressInner">
+                                            <div class="container-fluid w-100 m-0 p-0">
+                                                <div class="progress-bar " style="margin-bottom:-10px;">
+                                                    <div class="progress-bar-value"></div>
+                                                </div>
+                                                <div class="progress w-100" style="height: 10px;">
+                                                    <div class="progress-bar bg-primary" role="progressbar"
+                                                        id="myProgressBar" style="width: 0%;" aria-valuenow="25"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <center>
+                                            <form id="restartForm" action="/flask/restart" method="post">
+                                                <button type="submit"
+                                                    class="small w-75 rounded-pill btn   mt-4    btn-secondary  text-light ">
+                                                    stop
+                                                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="fw-bolder bi bi-cloud-upload"
+                                                    viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z" />
+                                                </svg> -->
+
+                                                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-stop-circle"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                    <path
+                                                        d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z" />
+                                                </svg> -->
+                                                </button>
+                                            </form>
+                                        </center>
+                                    </div>
+                                    <!-- <div class="progressContainer">
+                                    
+                                        <div class=" progress">
+                                            <div class="jkoop-progress-bar-indeterminate bg-success progress-bar progress-bar-animated"
+                                                role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                                                aria-valuemax="100" style="width: 100%;border-radius: 3px;"></div>
+                                        </div>
+                                    </div> -->
+
+                                </div>
+
+                                <div id="trainResult"
+                                    class=" p-4 align-self-start col-md-8  text-start border round_md  bg-white"
+                                    >
+                                    <!-- Your result will be displayed here -->
+
+
+                                </div>
+
+                            </div>
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="" id="testContainer" style="display:none" style="margin-bottom: 100px;">
+                        
+                        <center>
+                            <div class=" ">
+                                <div class="row  justify-content-center  align-items-center  " style="height: 80vh;">
+                                    <div class="row w-100   justify-content-center  "  >
+                                        <div class="col-md-4 p-4 overflow-auto  text-start  border round_md  bg-white" >
+                                            <h5>Test Model</h5>
+                                            <center>
+
+                                                <!-- <img class="rounded " id="selectedImage" alt="Selected Image"
+                                                style=" object-fit: cover;height:300px;width: 100%;display:none">
+                                             -->
+                                            </center>
+                                            <form id="testForm" method="POST" class="mt-3" action="/flask/test-result"
+                                                enctype="multipart/form-data">
+
+
+                                                <label for="imageInput" class=" round_md border-dash  p-1"
+                                                    style="height:300px;width: 100%;">
+
+                                                    <div class="image-overlay p-2 round_md">
+
+                                                        <div class="overlay round_md ">
+
+                                                            <img class="round_md  border" id="selectedImage"
+                                                                style="object-fit: cover; object-position: 50%;height:300px;width: 100%;">
+                                                        </div>
+                                                        <div class="overlay transluscent-4  round_md ">
+                                                            <center>
+                                                                <div class="p-2 round_md text-white  text-center">
+                                                                    <span class="fs-1 fw-bold"><i
+                                                                            class="bi bi-plus-lg"></i></span>
+                                                                    <br>
+                                                                    <span>Choose image</span>
+                                                                </div>
+                                                            </center>
+                                                        </div>
+
+
+
+
+
+
+
+                                                    </div>
+
+                                                </label>
+                                                <br>
+
+                                                <input type="file" class="form-control" name="image" id="imageInput"
+                                                    accept="image/*" hidden>
+                                                <center>
+                                                    <input class="btn btn-primary w-75 mt-3 rounded-pill" type="submit"
+                                                        id="selectedImage" value="Predict">
+                                                </center>
+                                            </form>
+                                        </div>
+                                        <div id="testResult"
+                                            class=" p-4 align-self-start col-md-8 text-start  border round_md  bg-white">
+
+
+                                            <!-- Your result will be displayed here -->
+                                        </div>
+
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+
+<script>
+
+function handleScroll() {
+            var navbar = document.getElementById("nav");
+
+            
+
+            if (window.scrollY > 0) {
+                navbar.classList.add("border-bottom");
+
+            } else {
+
+                navbar.classList.remove("border-bottom");
+            }
+        }
+        window.addEventListener("scroll", handleScroll);
+
+
+    // window.onload = function () {
+    //     fetch('/flask/', {
+    //         method: 'POST'
+    //     });
+    // };
+
+    function fetchRunningStatus() {
+        fetch('/flask/running_status')
+            .then(response => response.text())
+            .then(data => {
+                console.log(data)
+                if (data.includes("Error")) {
+                    
+                    const progressContainer = document.querySelector('.progressContainer');
+                    progressContainer.style.display = 'block';
+                    const progressInner = document.getElementById('progressInner');
+                    progressInner.classList.add('d-none');
+
+                } else if (data === "Running") {
+                        const statusContainer = document.querySelector('#statusContainer');
+                        statusContainer.style.display = 'block';
+
+
+                        const trainBtn = document.getElementById('trainForm');
+                        trainBtn.style.display = 'none';
+
+                        const progressContainer = document.querySelector('.progressContainer');
+                        progressContainer.style.display = 'block';
+                    } else if (data === "Stopping") {
+                        // history.go();
+                        // document.location.reload();
+                        window.location.reload(true);
+                    }
+
+
+            })
+            .catch(error => {
+
+                console.error('Error fetching data:', error);
+            });
+    }
+    fetchRunningStatus();
+
+    // Set up periodic updates every second (1000 milliseconds)
+    setInterval(fetchRunningStatus, 2000);
+
+
+    function fetchDataAndUpdate() {
+        fetch('/flask/status')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').textContent = data; // Add three dots
+                const percentageRegex = /(\d+)%/; // Match one or more digits followed by %
+                const progressBar = document.getElementById('myProgressBar');
+                const progressBarValue = document.querySelector('.progress-bar');
+
+
+                const match = data.match(percentageRegex);
+
+                if (match) {
+                    const percentageValue = parseInt(match[1]); // Extract the matched numeric value and convert it to an integer
+                    // console.log(percentageValue);
+
+                    //             const statusContainer = document.querySelector('#statusContainer');
+                    // statusContainer.style.display = 'block';
+
+
+                    // const trainBtn = document.getElementById('trainBtn');
+                    // trainBtn.style.display = 'none';
+
+                    // const progressContainer = document.querySelector('.progressContainer');
+                    // progressContainer.style.display = 'block';
+
+                    // Set the width to 50% (you can replace 50 with your desired percentage)
+                    progressBar.style.width = percentageValue + '%';
+                    progressBarValue.style.width = percentageValue + '%';
+
+
+
+                } else {
+                    console.log("Percentage not found in the string.");
+                }
+            })
+            .catch(error => {
+
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+    const loadingText = document.getElementById("loadingText");
+    var dots = 0;
+
+
+    function animateText() {
+        dots = (dots + 1) % 4;
+        loadingText.textContent = ".".repeat(dots);
+    }
+    fetchDataAndUpdate();
+
+    // Set up periodic updates every second (1000 milliseconds)
+    const status = setInterval(fetchDataAndUpdate, 2000);
+
+    // Set up periodic animation every 500 milliseconds
+
+    const animationInterval = setInterval(animateText, 1000); // Faster dot animation
+
+
+    document.querySelector('#restartForm').addEventListener('submit', function () {
+        event.preventDefault();
+
+        document.getElementById('status').textContent = "Stopping"
+        fetch('/flask/restart', { method: 'POST' })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data)
+                // clearInterval(status);
+            });
+
+
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+    });
+
+
+    var trainC = document.getElementById("trainContainer");
+    var testC = document.getElementById("testContainer");
+    var trainCbtn = document.getElementById("onTrain");
+    var testCbtn = document.getElementById("onTest");
+    function onTrain(e) {
+
+
+
+
+        trainC.style.display = 'block';
+        e.classList.add('border-bottom');
+        e.classList.remove('text-dark');
+
+        e.classList.add('text-success');
+
+
+        testCbtn.classList.remove('border-bottom');
+        testCbtn.classList.remove('text-success');
+        testCbtn.classList.add('text-dark');
+
+        testC.style.display = 'none';
+
+    }
+    function onTest(e) {
+
+        testC.style.display = 'block';
+        e.classList.add('border-bottom');
+        e.classList.remove('text-dark');
+
+        e.classList.add('text-success');
+        trainCbtn.classList.remove('border-bottom');
+        trainCbtn.classList.remove('text-success');
+        trainCbtn.classList.add('text-dark');
+
+
+        trainC.style.display = 'none';
+
+    }
+
+    const imageInput = document.getElementById('imageInput');
+    const selectedImage = document.getElementById('selectedImage');
+    selectedImage.style.display = 'none';
+    imageInput.addEventListener('change', function () {
+        const file = imageInput.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            selectedImage.style.display = 'block'
+            selectedImage.src = imageUrl;
+        } else {
+            selectedImage.style.display = 'none'
+            selectedImage.src = '';
+        }
+    });
+    var trainResultContainer = document.getElementById('trainResult');
+    trainResultContainer.style.display = 'none';
+
+    var apikey = document.getElementById('apikey');
+    var trainEpoch = document.getElementById('trainEpoch');
+    var trainBatch = document.getElementById('trainBatch');
+
+
+
+
+    // apikey.value = localStorage.getItem('apikey');
+    // trainEpoch.value = localStorage.getItem('trainEpoch');
+    // trainBatch.value = localStorage.getItem('trainBatch');
+
+    document.querySelector('#trainForm').addEventListener('submit', function () {
+
+
+
+
+
+        trainResultContainer.style.display = 'none';
+
+
+
+        // Perform AJAX request to update images
+        event.preventDefault();
+
+
+
+        const statusContainer = document.querySelector('#statusContainer');
+        statusContainer.style.display = 'block';
+
+
+        const trainBtn = document.getElementById('trainForm');
+        trainBtn.style.display = 'none';
+
+        const progressContainer = document.querySelector('.progressContainer');
+    
+
+        progressContainer.style.display = 'block';
+
+
+
+
+        var formData = new FormData(this);
+        fetch('/flask/train_model', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Update the image sources with the received data
+                if (data.result.success == 'true') {
+                    loadingText.style.display = 'none';
+
+                    progressContainer.style.display = 'none';
+                    trainBtn.style.display = 'block';
+
+                    var title = document.createElement('h5');
+                    title.textContent = "Train Result:";
+
+                    var con = document.createElement('div');
+                    con.classList.add('container');
+                    var row = document.createElement('div');
+                    row.classList.add('row');
+
+                    var col1 = document.createElement('div');
+                    col1.classList.add('col-md-6');
+                    var col2 = document.createElement('div');
+                    col2.classList.add('col-md-6');
+
+
+
+
+                    var accuracyGraph = document.createElement('img');
+                    accuracyGraph.style.width = '100%';
+                    accuracyGraph.src = `data:image/png;base64,${data.result.accuracyGraph}`;
+
+                    var lossGraph = document.createElement('img');
+                    lossGraph.style.width = '100%';
+                    lossGraph.src = `data:image/png;base64,${data.result.lossGraph}`;
+
+                    col1.appendChild(accuracyGraph);
+                    col2.appendChild(lossGraph);
+
+
+                    row.appendChild(col1);
+                    row.appendChild(col2);
+                    con.appendChild(row);
+                    // Create a table element
+                    var table = document.createElement('table');
+                    table.style.width = '90%';
+                    table.classList.add('table', 'table-bordered', 'rounded', 'm-3', 'p-4', 'rounded', 'bg-white');
+
+
+                    // Create table headers
+                    var tableHeader = document.createElement('thead');
+                    var headerRow = document.createElement('tr');
+                    var headerData = ["Epoch", "Loss", "Accuracy", "Val Loss", "Val Accuracy"];
+
+                    for (var i = 0; i < headerData.length; i++) {
+                        var th = document.createElement('th');
+                        th.textContent = headerData[i];
+                        headerRow.appendChild(th);
+                    }
+
+                    tableHeader.appendChild(headerRow);
+                    table.appendChild(tableHeader);
+
+                    // Create table body
+                    var tableBody = document.createElement('tbody');
+
+                    for (var i = 0; i < data.result.loss.length; i++) {
+                        var epoch = i + 1;
+                        var loss = data.result.loss[i].toFixed(4);
+                        var accuracy = data.result.accuracy[i].toFixed(4);
+                        var val_loss = data.result.val_loss[i].toFixed(4);
+                        var val_accuracy = data.result.val_accuracy[i].toFixed(4);
+
+                        var row = document.createElement('tr');
+                        var epochCell = document.createElement('td');
+                        epochCell.textContent = epoch;
+                        var lossCell = document.createElement('td');
+                        lossCell.textContent = loss;
+                        var accuracyCell = document.createElement('td');
+                        accuracyCell.textContent = accuracy;
+                        var valLossCell = document.createElement('td');
+                        valLossCell.textContent = val_loss;
+                        var valAccuracyCell = document.createElement('td');
+                        valAccuracyCell.textContent = val_accuracy;
+
+                        row.appendChild(epochCell);
+                        row.appendChild(lossCell);
+                        row.appendChild(accuracyCell);
+                        row.appendChild(valLossCell);
+                        row.appendChild(valAccuracyCell);
+
+                        tableBody.appendChild(row);
+                    }
+
+                    table.appendChild(tableBody);
+
+                    // Append the table to the resultContainer
+                    trainResultContainer.innerHTML = '';
+                    trainResultContainer.appendChild(title);
+                    // trainResultContainer.appendChild(accuracyGraph);
+                    trainResultContainer.appendChild(con);
+                    trainResultContainer.appendChild(table);
+                    trainResultContainer.style.display = 'block';
+
+
+                } else {
+                    progressContainer.style.display = 'block';
+                    // trainBtn.style.display = 'block';
+
+
+                    progressInner.style.display = 'none';
+                }
+
+            })
+            .catch(error => {
+
+                console.error('Error:', error);
+
+
+            });
+    });
+
+
+
+
+    const testResultContainer = document.getElementById('testResult');
+    testResultContainer.style.display = 'none';
+
+    document.querySelector('#testForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        testResultContainer.style.display = 'none';
+
+        var formData = new FormData(this);
+
+        fetch('/flask/test-result', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                var title = document.createElement('h5');
+                title.textContent = "Test Result:";
+                // Create a table element
+                var table = document.createElement('table');
+                table.classList.add('table');
+
+                // Create table rows for "Predicted Disease" and "Confidence"
+                var row1 = document.createElement('tr');
+                var row2 = document.createElement('tr');
+
+                // Create table cells for the labels
+                var label1 = document.createElement('td');
+
+                var label2 = document.createElement('td');
+
+
+                // Create table cells for the values
+                var value1 = document.createElement('td');
+
+                var value2 = document.createElement('td');
+
+
+
+                // Check if the predicted disease is invalid or confidence is below 85%
+                console.log(data.result.confidence)
+                if (data.result.predicted_disease == "Invalid" /*|| data.result.confidence < 85*/) {
+                    label1.textContent = "Invalid";
+                } else {
+                    label1.textContent = "Predicted Disease:";
+                    label2.textContent = "Confidence:";
+                    value1.textContent = data.result.predicted_disease;
+                    value2.textContent = data.result.confidence.toFixed(2) + "%";
+                }
+
+                // Append the label and value cells to the rows
+                row1.appendChild(label1);
+                row2.appendChild(label2);
+                row1.appendChild(value1);
+                row2.appendChild(value2);
+
+                // Append the rows to the table
+                table.appendChild(row1);
+                table.appendChild(row2);
+
+                // Target the "resultContainer" div by its id and append the table
+                testResultContainer.innerHTML = '';
+                testResultContainer.appendChild(title);
+                testResultContainer.appendChild(table);
+                testResultContainer.style.display = 'block';
+
+            })
+
+            .catch(error => {
+
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+</html>
