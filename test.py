@@ -1,50 +1,78 @@
-# from urllib import request
-from flask import Flask, request, render_template, jsonify
-import tensorflow_datasets as tfds
-import matplotlib.pyplot as plt
-import base64
-import io
-import tensorflow as tf
-import pathlib
+
+import requests
 import os
-import numpy as np
-import pandas as pd
-
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from sklearn.model_selection import train_test_split
-
-from PIL import Image
-import numpy as np
-import tensorflow.lite as tflite
-import matplotlib
-matplotlib.use('agg')  # Set Matplotlib to use the 'agg' backend
+import json
+from flask import Flask, jsonify, request, render_template
+import shutil
 
 
-api_url = "http://localhost/PechAI/img-api.php"
+def download_image(image_url, output_dir):
+    image_filename = os.path.join(output_dir, os.path.basename(image_url))
+    if not os.path.exists(image_filename):
+        image_response = requests.get(image_url)
+        if image_response.status_code == 200:
+            with open(image_filename, 'wb') as image_file:
+                image_file.write(image_response.content)
+            return "Downloaded: " + image_filename
+        else:
+            return "Failed to download: " + image_url
+    else:
+        return "Already exists: " + image_filename
 
-# Make a GET request to the API
-response = request.get(api_url)
+def download_images_from_api(api_url, api_key, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-# Check if the request was successful
-if response.status_code == 200:
-    data = response.json()  # Assuming the API returns JSON data as shown in your example
+    response = requests.post(api_url, data={'api_key': api_key})
 
-    # Create dataframes for train, validation, and test files
-    train_df = pd.DataFrame(columns=['file_path', 'label'])
+    if response.status_code == 200:
+        data = json.loads(response.text)
+        all_image_urls = []
 
-    # Iterate through the API data to populate the dataframes
-    for category, image_urls in data.items():
-        for image_url in image_urls:
-            # Append the image URL and category label to the dataframe
-            train_df = train_df.append({'file_path': image_url, 'label': category}, ignore_index=True)
+        # Gather all image URLs from the API response
+        for label, image_urls in data.items():
+            label_dir = os.path.join(output_dir, label)
+            if not os.path.exists(label_dir):
+                os.makedirs(label_dir)
+            all_image_urls.extend([(url, label_dir) for url in image_urls])
 
-    # Define the classes (diseases) that we want to detect
-    class_names = list(data.keys())
-    class_names.append("Invalid")  # Add "Invalid" class name
+        # Download images concurrently
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            results = list(executor.map(lambda item: download_image(*item), all_image_urls))
 
-    # Print the list of class names
-    print(class_names)
+        return results
+    else:
+        return f"Error: Request failed with status code {response.status_code}"
 
-else:
-    print(f"Failed to retrieve data from the API. Status code: {response.status_code}")
+
+def delete_datasets_folder(data_dir):
+    try:
+        
+        # Iterate over all items in the datasets folder
+        for root, dirs, files in os.walk(data_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                os.remove(file_path)
+
+            for folder in dirs:
+                folder_path = os.path.join(root, folder)
+                shutil.rmtree(folder_path)
+
+        # Remove the datasets folder itself
+        shutil.rmtree(data_dir)
+
+        return True, "Datasets folder and its contents deleted successfully."
+
+    except Exception as e:
+        return False, f"Error deleting datasets folder: {str(e)}"
+
+
+data_dir = 'datasets'  # Replace with your dataset directory
+success, message = delete_datasets_folder(data_dir)
+
+api_url = 'https://pechai.site/img-api.php'
+api_key = "MtMmLomDuTNSOYvgVVVHDnaf17zsQ0Av"
+response = requests.get(api_url, verify=False)
+
+
+result = download_images_from_api(api_url, api_key, data_dir)
