@@ -22,7 +22,7 @@ import tensorflow.lite as tflite
 import requests
 from PIL import Image
 from sklearn.utils import resample
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, redirect, render_template, jsonify
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
@@ -259,6 +259,30 @@ class SaveMetricsCallback(tf.keras.callbacks.Callback):
         print(f"Epoch {epoch + 1} metrics saved to {self.file_path}")
 
 
+
+VALIDATE_SESSION_URL = 'http://localhost/PechAI/validate-session.php'
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    # Fetch allowed logins from the endpoint
+    response = requests.post(VALIDATE_SESSION_URL, data={'read': True})
+
+    if response.status_code == 200:
+        allowed_logins = response.json()
+        for login in allowed_logins:
+            if login['ausername'] == username and login['apassword'] == password:
+                # Login successful, return success message
+                return jsonify({'message': 'Login successful'})
+        # If no valid login found
+        return jsonify({'error': 'Invalid username or password'}), 401
+    else:
+        return jsonify({'error': 'Error fetching allowed logins'}), 500
+
 @app.route('/')
 def index():
     with open('running_status.txt', 'r') as f:
@@ -293,6 +317,15 @@ def running_status():
 
 
 
+def fetch_disease_info(disease_name):
+    url = 'https://pechai.site/classnames-api.php'
+    response = requests.get(url)
+    data = response.json()
+    
+    for disease in data:
+        if disease['classname'] == disease_name:
+            return disease
+    return None
 
 # Function to stop a running process by its process ID
 def stop_process(pid):
@@ -336,6 +369,7 @@ def restart():
 
     # Start a new instance of the PowerShell script
     start_new_process('run_trainmodel.ps1')
+    # 
     current_pid = os.getpid()
 
     stop_process(current_pid)
@@ -425,11 +459,24 @@ def test_model():
 
         # Print the results
         # result_message = "Predicted Disease: {}\nConfidence: {:.2f}%".format(predicted_disease, confidence)
+        
+        
+        disease_info = fetch_disease_info(predicted_disease)
+        
+        # Extracting information from disease_info and adding it to result_data
         result_data = {
             "predicted_disease": predicted_disease,
-            "confidence": confidence
+            "confidence": confidence,
+            "disease_info": disease_info,
+            "information": disease_info.get('information', ""),
+            "information_ceb": disease_info.get('information_ceb', ""),
+            "causes": disease_info.get('causes', ""),
+            "causes_ceb": disease_info.get('causes_ceb', ""),
+            "recommendation": disease_info.get('recommendation', ""),
+            "recommendation_ceb": disease_info.get('recommendation_ceb', "")
         }
 
+        print(result_data)
     finally:
         # Delete the temporary uploaded image
         os.remove(upload_path)
