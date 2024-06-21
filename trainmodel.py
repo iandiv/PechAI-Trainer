@@ -283,7 +283,7 @@ def login():
     else:
         return jsonify({'error': 'Error fetching allowed logins'}), 500
 
-@app.route('/')
+@app.route('/')  
 def index():
     with open('running_status.txt', 'r') as f:
         content = f.read()
